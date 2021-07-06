@@ -1,24 +1,43 @@
-import logo from './logo.svg';
 import './App.css';
+import useFetch from "./hooks/useFetch";
+import { GET_USER_URL } from "./api/constants";
+import UpperBar from "./components/UpperBar";
+import BottomBar from "./components/BottomBar";
 
-function App() {
+const App = () => {
+	const [res, error, isFetching] = useFetch(GET_USER_URL);
+	
+	const renderError = () => {
+		if (error) {
+			return (
+				<div className="error">
+					Sorry, an error occurred during request, reload and try again.
+				</div>
+			)
+		}
+	}
+	
+	const renderFetching = () => {
+		if (isFetching) {
+			return (
+				<div className="loading">Loading...</div>
+			)
+		}
+	}
+	
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+	  <div className="pageContainer">
+		  <div className="mainWrapper">
+			  {renderFetching()}
+			  {renderError()}
+			  {!isFetching && !error && (
+			  	<>
+					  <UpperBar res={res} />
+					  <BottomBar res={res} />
+				  </>
+			  )}
+		  </div>
+	  </div>
   );
 }
 
